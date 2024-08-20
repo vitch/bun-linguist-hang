@@ -1,0 +1,14 @@
+diff --git a/dist/helpers/read-file.js b/dist/helpers/read-file.js
+index f52ebbcb62ad3c980feb1fce11653f22b409be32..acc61ec8497577f89d510d026e063b606dff414b 100644
+--- a/dist/helpers/read-file.js
++++ b/dist/helpers/read-file.js
+@@ -13,6 +13,9 @@ async function readFile(filename, onlyFirstLine = false) {
+     const stream = fs_1.default.createReadStream(filename, { highWaterMark: chunkSize });
+     let content = '';
+     for await (const data of stream) { // may throw
++        if (process.env.LOG_READ_STREAM) {
++            console.log(`****RECEIVED DATA****\n${data}\n****FOR FILENAME****\n${filename}`);
++        }
+         content += data.toString();
+         if (onlyFirstLine && content.includes('\n')) {
+             return content.split(/\r?\n/)[0];

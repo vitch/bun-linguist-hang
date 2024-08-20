@@ -21,4 +21,11 @@ of a hang in bun. To keep this reproduction self contained it is just running ov
 the contents of `node_modules` (which is quite small) so you may need to run `-bun`
 a few times.
 
+I've [patched](https://bun.sh/docs/install/patch) the `linguist-js` dependency to make 
+it easier to see where the hang happens. You can opt into additional logging of the 
+data coming back from `createReadStream` with the `LOG_READ_STREAM` environment variable
+(e.g. `LOG_READ_STREAM=1 ./scripts/linguist-bun.js`). The output is very noisy but shows 
+you where it gets stuck - it seems to be when all of the content for the file has 
+already streamed.
+
 Tested on `Darwin 23.5.0 arm64 arm`
