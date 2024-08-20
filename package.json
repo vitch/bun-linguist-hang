@@ -1,0 +1,11 @@
+{
+  "name": "bun-linguist-hang",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.1.24",
+  "scripts": {},
+  "dependencies": {
+    "linguist-js": "2.7.1"
+  },
+  "devDependencies": {}
+}
