@@ -21,4 +21,10 @@ of a hang in bun. To keep this reproduction self contained it is just running ov
 the contents of `node_modules` (which is quite small) so you may need to run `-bun`
 a few times.
 
+In order to repeatedly run the command and see if it hangs you can try the following
+(tested with `zsh`):
+
+`for ((;;))./scripts/linguist-bun.js &&sleep .1`
+`for ((;;))./scripts/linguist-node.js &&sleep .1`
+
 Tested on `Darwin 23.5.0 arm64 arm`

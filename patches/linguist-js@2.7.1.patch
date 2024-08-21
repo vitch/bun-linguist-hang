@@ -1,0 +1,18 @@
+diff --git a/node_modules/linguist-js/.bun-tag-3df3cf8b3d53ed55 b/.bun-tag-3df3cf8b3d53ed55
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/index.js b/dist/index.js
+index b2374d07704d40ac760d6245595941bd4a961749..213df244cc223ea6329fb797d8eb8bb7294473e0 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -315,8 +315,9 @@ async function analyse(rawPaths, opts = {}) {
+         }
+         // Skip binary files
+         if (!useRawContent && !opts.keepBinary) {
+-            if (await (0, isbinaryfile_1.isBinaryFile)(file))
++            if ((0, isbinaryfile_1.isBinaryFileSync)(file)) {
+                 continue;
++            }
+         }
+         // Parse heuristics if applicable
+         if (opts.checkHeuristics)
