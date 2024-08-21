@@ -41,3 +41,16 @@ The output is very noisy but shows you where it gets stuck - it is in one of two
  2. Between `**** GETTING CONTENT FOR <path>> ****` and `GOT <count> characters FOR <path> ****`
 
 Tested on `Darwin 23.5.0 arm64 arm`
+
+## Fix
+
+The patches to `linguist-js` which have been added on this branch switch to using sync
+file access rather than streams which seems to bypass the problem.
+
+Specifically, the following async code is no longer called:
+
+ * https://github.com/Nixinova/LinguistJS/blob/main/src/helpers/read-file.ts#L9
+ * https://github.com/gjtorikian/isBinaryFile/blob/4.0.10/src/index.ts#L106 (bypassed by 
+   calling `isBinaryFileSync` instead of `isBinaryFile`)
+
+It seems like the hang could occur in either of these places

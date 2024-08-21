@@ -1,8 +1,38 @@
+diff --git a/node_modules/linguist-js/.bun-tag-4bf5faabacd2b385 b/.bun-tag-4bf5faabacd2b385
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/linguist-js/.bun-tag-7fc034fd7060c62a b/.bun-tag-7fc034fd7060c62a
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/bin/index.js b/bin/index.js
 old mode 100644
 new mode 100755
+diff --git a/dist/helpers/read-file.js b/dist/helpers/read-file.js
+index f52ebbcb62ad3c980feb1fce11653f22b409be32..3d80571640b71f288497450f04fbfae2da1967c8 100644
+--- a/dist/helpers/read-file.js
++++ b/dist/helpers/read-file.js
+@@ -9,15 +9,11 @@ const fs_1 = __importDefault(require("fs"));
+  * @throws 'EPERM' if the file is not readable.
+  */
+ async function readFile(filename, onlyFirstLine = false) {
+-    const chunkSize = 100;
+-    const stream = fs_1.default.createReadStream(filename, { highWaterMark: chunkSize });
+-    let content = '';
+-    for await (const data of stream) { // may throw
+-        content += data.toString();
+-        if (onlyFirstLine && content.includes('\n')) {
+-            return content.split(/\r?\n/)[0];
+-        }
++    const content = fs_1.default.readFileSync(filename, 'utf8');
++    if (onlyFirstLine) {
++        return content.split(/\r?\n/)[0];
+     }
++
+     return content;
+ }
+ exports.default = readFile;
 diff --git a/dist/index.js b/dist/index.js
-index b2374d07704d40ac760d6245595941bd4a961749..cbf3c519f3137a18296a487a09deb823a30b28b8 100644
+index b2374d07704d40ac760d6245595941bd4a961749..a17eddc1b6ea3c4ad56b8b4012d79129aa84bb0a 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -315,8 +315,18 @@ async function analyse(rawPaths, opts = {}) {
@@ -13,7 +43,7 @@ index b2374d07704d40ac760d6245595941bd4a961749..cbf3c519f3137a18296a487a09deb823
 +            if (process.env.LOG_READ_STREAM) {
 +                console.log(`**** CHECKING IF ${file} IS BINARY ****`);
 +            }
-+            if (await (0, isbinaryfile_1.isBinaryFile)(file)) {
++            if ((0, isbinaryfile_1.isBinaryFileSync)(file)) {
 +                if (process.env.LOG_READ_STREAM) {
 +                    console.log(`**** ${file} IS BINARY ****`);
 +                }
