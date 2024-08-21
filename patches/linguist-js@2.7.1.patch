@@ -1,14 +1,41 @@
-diff --git a/dist/helpers/read-file.js b/dist/helpers/read-file.js
-index f52ebbcb62ad3c980feb1fce11653f22b409be32..acc61ec8497577f89d510d026e063b606dff414b 100644
---- a/dist/helpers/read-file.js
-+++ b/dist/helpers/read-file.js
-@@ -13,6 +13,9 @@ async function readFile(filename, onlyFirstLine = false) {
-     const stream = fs_1.default.createReadStream(filename, { highWaterMark: chunkSize });
-     let content = '';
-     for await (const data of stream) { // may throw
-+        if (process.env.LOG_READ_STREAM) {
-+            console.log(`****RECEIVED DATA****\n${data}\n****FOR FILENAME****\n${filename}`);
-+        }
-         content += data.toString();
-         if (onlyFirstLine && content.includes('\n')) {
-             return content.split(/\r?\n/)[0];
+diff --git a/bin/index.js b/bin/index.js
+old mode 100644
+new mode 100755
+diff --git a/dist/index.js b/dist/index.js
+index b2374d07704d40ac760d6245595941bd4a961749..cbf3c519f3137a18296a487a09deb823a30b28b8 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -315,8 +315,18 @@ async function analyse(rawPaths, opts = {}) {
+         }
+         // Skip binary files
+         if (!useRawContent && !opts.keepBinary) {
+-            if (await (0, isbinaryfile_1.isBinaryFile)(file))
++            if (process.env.LOG_READ_STREAM) {
++                console.log(`**** CHECKING IF ${file} IS BINARY ****`);
++            }
++            if (await (0, isbinaryfile_1.isBinaryFile)(file)) {
++                if (process.env.LOG_READ_STREAM) {
++                    console.log(`**** ${file} IS BINARY ****`);
++                }
+                 continue;
++            }
++            if (process.env.LOG_READ_STREAM) {
++                console.log(`**** ${file} IS NOT BINARY ****`);
++            }
+         }
+         // Parse heuristics if applicable
+         if (opts.checkHeuristics)
+@@ -352,7 +362,13 @@ async function analyse(rawPaths, opts = {}) {
+                         }
+                     }
+                     // Check file contents and apply heuristic patterns
++                    if (process.env.LOG_READ_STREAM) {
++                        console.log(`**** GETTING CONTENT FOR ${file} ****`);
++                    }
+                     const fileContent = opts.fileContent ? manualFileContent[files.indexOf(file)] : await (0, read_file_1.default)(file).catch(() => null);
++                    if (process.env.LOG_READ_STREAM) {
++                        console.log(`**** GOT ${fileContent.length} characters FOR ${file} ****`);
++                    }
+                     // Skip if file read errors
+                     if (fileContent === null)
+                         continue;

@@ -21,11 +21,23 @@ of a hang in bun. To keep this reproduction self contained it is just running ov
 the contents of `node_modules` (which is quite small) so you may need to run `-bun`
 a few times.
 
+In order to repeatedly run the command and see if it hangs you can try the following
+(tested with `zsh`):
+
+`for ((;;))./scripts/linguist-bun.js &&sleep .1`
+
+or 
+
+`for ((;;))./scripts/linguist-node.js &&sleep .1`
+
 I've [patched](https://bun.sh/docs/install/patch) the `linguist-js` dependency to make 
 it easier to see where the hang happens. You can opt into additional logging of the 
 data coming back from `createReadStream` with the `LOG_READ_STREAM` environment variable
-(e.g. `LOG_READ_STREAM=1 ./scripts/linguist-bun.js`). The output is very noisy but shows 
-you where it gets stuck - it seems to be when all of the content for the file has 
-already streamed.
+(e.g. `LOG_READ_STREAM=1 ./scripts/linguist-bun.js`). 
+
+The output is very noisy but shows you where it gets stuck - it is in one of two places:
+
+ 1. Between `**** CHECKING IF <path> IS BINARY ****` and `**** <path> IS (NOT) BINARY ****`
+ 2. Between `**** GETTING CONTENT FOR <path>> ****` and `GOT <count> characters FOR <path> ****`
 
 Tested on `Darwin 23.5.0 arm64 arm`
